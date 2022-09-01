@@ -1,0 +1,17 @@
+---
+- hosts: lab
+  become: True
+  roles:
+  - role: coffeesprout.openvpn
+    openvpn_default_server_ip: "10.2.1.0 255.255.255.0"
+    openvpn_port: 443
+    openvpn_proto: udp
+    openvpn_clients:
+    - cn: user1
+      validity: 3650
+      password: 123
+    - cn: user2-password
+      validity: 365
+      password: somesecurepassword
+      openvpn_client_push_routes:
+      - "10.2.0.0 255.255.255.0"

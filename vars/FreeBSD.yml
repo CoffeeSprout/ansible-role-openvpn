@@ -1,0 +1,9 @@
+---
+
+openvpn_folder: /usr/local/etc/openvpn
+openvpn_easyrsa_folder: /usr/local/share/easy-rsa
+
+openvpn_packages:
+- "openvpn"
+- "python3"
+- "security/py-cryptography"

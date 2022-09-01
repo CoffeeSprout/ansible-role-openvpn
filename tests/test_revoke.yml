@@ -1,0 +1,14 @@
+---
+- hosts: lab
+  become: True
+  tasks:
+  - community.crypto.x509_crl:
+      path: "/usr/local/etc/openvpn/keys/crl.pem"
+      privatekey_path: "/usr/local/etc/openvpn/keys/ca-key.pem"
+      issuer:
+        CN: "OpenVPN-CA-{{inventory_hostname}}"
+      next_update: "+365d"
+      revoked_certificates:
+      - path: /usr/local/etc/openvpn/keys/user1.crt
+        reason: "privilege_withdrawn"
+      mode: update

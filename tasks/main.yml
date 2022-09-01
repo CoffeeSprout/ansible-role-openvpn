@@ -1,0 +1,21 @@
+---
+# tasks file for bvansomeren.openvpn-freebsd-server
+
+- name: ensure OS specifics are included
+  include_vars: "{{ item }}"
+  with_first_found:
+  - "{{ ansible_os_family }}.yml"
+  tags:
+  - always
+
+- name: perform install
+  include_tasks: install.yml
+
+- name: include configuration
+  include_tasks: configure.yml
+
+- name: include server keys
+  include_tasks: server-keys.yml
+
+- name: include client key generation
+  include_tasks: client-configs.yml 

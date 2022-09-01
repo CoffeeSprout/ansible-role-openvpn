@@ -1,0 +1,6 @@
+[lab]
+freebsd13-lab
+debian11-lab
+
+[hypervisor]
+neptune

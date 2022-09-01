@@ -1,0 +1,80 @@
+---
+
+- name: ensure client key
+  community.crypto.openssl_privatekey:
+    path: "{{ openvpn_key_folder }}/{{ item.cn }}.key"
+    passphrase: "{{ item.password | default('') }}"
+    cipher: "auto"
+    size: "{{ openvpn_default_keysize }}"
+    type: "{{ item.type | default('RSA') }}"
+  with_items: "{{ openvpn_clients }}"
+  tags:
+  - client
+
+- name: ensure client csr
+  community.crypto.openssl_csr:
+    path: "{{ openvpn_key_folder }}/{{ item.cn }}.csr"
+    privatekey_path: "{{ openvpn_key_folder }}/{{ item.cn }}.key"
+    privatekey_passphrase:  "{{ item.password | default(omit) }}"
+    common_name: "OpenVPN-Client-{{ inventory_hostname }}-{{ item.cn }}"
+    extended_key_usage:
+    - clientAuth
+  with_items: "{{ openvpn_clients }}"
+  tags:
+  - client
+
+- name: ensure client key is signed
+  community.crypto.x509_certificate:
+    path: "{{ openvpn_key_folder }}/{{ item.cn }}.crt"
+    csr_path:  "{{ openvpn_key_folder }}/{{ item.cn }}.csr"
+    ownca_path: "{{ openvpn_key_folder }}/ca.crt"
+    ownca_privatekey_path: "{{ openvpn_key_folder }}/ca-key.pem"
+    ownca_not_after: "+{{ item.validity | default(openvpn_default_client_expire) }}d"
+    provider: ownca
+  with_items: "{{ openvpn_clients }}"
+  tags:
+  - client
+
+- name: register server ca key
+  slurp:
+    src: "{{ openvpn_key_folder }}/ca.crt"
+  register: ca_cert
+  tags:
+  - client
+
+- name: register tls-auth key
+  slurp:
+    src: "{{ openvpn_key_folder }}/ta.key"
+  register: tls_auth
+  tags:
+  - client
+
+- name: register client certs
+  slurp:
+    src: "{{ openvpn_key_folder }}/{{ item.cn }}.crt"
+  with_items: "{{ openvpn_clients }}"
+  register: client_certs
+  tags:
+  - client
+
+- name: register client keys
+  slurp:
+    src: "{{ openvpn_key_folder }}/{{ item.cn }}.key"
+  with_items: "{{ openvpn_clients }}"
+  register: client_keys
+  tags:
+  - client
+
+- name: generate client config
+  template:
+    src: client.ovpn
+    dest: "{{ openvpn_client_folder }}/{{ item.0.item.cn }}-{{ inventory_hostname }}.ovpn"
+    owner: root
+    group: "{{ openvpn_root_group |  default('wheel') }}"
+    mode: 0400
+  with_together:
+    - "{{ client_certs.results }}"
+    - "{{ client_keys.results }}"
+  tags:
+  - client
+
