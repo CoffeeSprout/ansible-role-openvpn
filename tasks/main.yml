@@ -10,6 +10,9 @@
 
 - name: perform install
   include_tasks: install.yml
+  tags:
+  - install
+  - configure
 
 - name: include configuration
   include_tasks: configure.yml
@@ -18,4 +21,7 @@
   include_tasks: server-keys.yml
 
 - name: include client key generation
-  include_tasks: client-configs.yml 
+  include_tasks: client-configs.yml
+  tags:
+  - client
+  - pull

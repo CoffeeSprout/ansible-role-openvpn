@@ -78,3 +78,12 @@
   tags:
   - client
 
+- name: pull client config
+  fetch:
+    dest: "{{ playbook_dir }}/{{ inventory_hostname }}/"
+    flat: True
+    src:  "{{ openvpn_client_folder }}/{{ item.cn }}-{{ inventory_hostname }}.ovpn"
+  with_items: "{{ openvpn_clients }}"
+  tags:
+  - client
+  - pull
