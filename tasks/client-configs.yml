@@ -80,7 +80,7 @@
 
 - name: pull client config
   fetch:
-    dest: "{{ playbook_dir }}/{{ inventory_hostname }}/"
+    dest: "{{ playbook_dir }}/{{ inventory_hostname }}/{{ item.cn }}.ovpn"
     flat: True
     src:  "{{ openvpn_client_folder }}/{{ item.cn }}-{{ inventory_hostname }}.ovpn"
   with_items: "{{ openvpn_clients }}"

@@ -16,6 +16,8 @@
 
 - name: include configuration
   include_tasks: configure.yml
+  tags:
+  - configure
 
 - name: include server keys
   include_tasks: server-keys.yml
