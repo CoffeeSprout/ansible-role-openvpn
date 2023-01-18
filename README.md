@@ -36,6 +36,7 @@ Including an example of how to use your role (for instance, with variables passe
     	    - cn: user2-password
       	 	  validity: 365
       		  password: somesecurepassword
+            ip: 10.2.1.55
     	    openvpn_client_push_routes:
     	    - "10.2.0.0 255.255.255.0"
   	 	 roles:

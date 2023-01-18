@@ -61,6 +61,8 @@ openvpn_default_configuration:
   value: openvpn-status.log
 - name: verb
   value: 3
+- name: client-config-dir
+  value: "{{ openvpn_folder }}/ccd"
 
 openvpn_configuration: []
 

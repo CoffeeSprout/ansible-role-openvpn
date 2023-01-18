@@ -31,6 +31,7 @@
   - "{{ openvpn_folder }}"
   - "{{ openvpn_key_folder }}"
   - "{{ openvpn_client_folder }}"
+  - "{{ openvpn_folder }}/ccd"
   tags:
   - configure
 

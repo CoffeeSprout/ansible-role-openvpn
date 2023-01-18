@@ -18,6 +18,7 @@
   include_tasks: configure.yml
   tags:
   - configure
+  - ccd
 
 - name: include server keys
   include_tasks: server-keys.yml
@@ -27,3 +28,4 @@
   tags:
   - client
   - pull
+  - ccd

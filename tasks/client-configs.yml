@@ -3,8 +3,8 @@
 - name: ensure client key
   community.crypto.openssl_privatekey:
     path: "{{ openvpn_key_folder }}/{{ item.cn }}.key"
-    passphrase: "{{ item.password | default('') }}"
-    cipher: "auto"
+    passphrase: "{{ item.password | default(omit) }}"
+    cipher: "{{ 'auto' if item.password is defined else omit }}"
     size: "{{ openvpn_default_keysize }}"
     type: "{{ item.type | default('RSA') }}"
   with_items: "{{ openvpn_clients }}"
@@ -64,6 +64,15 @@
   register: client_keys
   tags:
   - client
+
+- name: set static ip if requested per client
+  template:
+    src: ccd.j2
+    dest: "{{ openvpn_folder }}/ccd/OpenVPN-Client-{{ inventory_hostname }}-{{ item.cn }}"
+  with_items: "{{ openvpn_clients }}"
+  tags:
+  - client
+  - ccd
 
 - name: generate client config
   template:
