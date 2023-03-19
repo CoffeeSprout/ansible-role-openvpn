@@ -3,6 +3,7 @@
 openvpn_folder: /etc/openvpn
 openvpn_easyrsa_folder: /usr/share/easy-rsa
 openvpn_root_group: sudo
+openvpn_group: nogroup
 
 openvpn_packages:
 - "openvpn"

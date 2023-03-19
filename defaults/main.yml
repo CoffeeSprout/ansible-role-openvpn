@@ -36,7 +36,7 @@ openvpn_default_configuration:
 - name: user
   value: nobody
 - name: group
-  value: nobody
+  value: "{{ openvpn_group | default('nobody') }}"
 - name: dh 
   value: "{{ openvpn_key_folder }}/dh.pem"
 - name: ca 
