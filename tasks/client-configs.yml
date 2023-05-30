@@ -16,7 +16,8 @@
     path: "{{ openvpn_key_folder }}/{{ item.cn }}.csr"
     privatekey_path: "{{ openvpn_key_folder }}/{{ item.cn }}.key"
     privatekey_passphrase:  "{{ item.password | default(omit) }}"
-    common_name: "OpenVPN-Client-{{ inventory_hostname }}-{{ item.cn }}"
+    common_name: "{{ item.cn }}"
+    subject_alt_name: "DNS:OpenVPN-Client-{{ inventory_hostname }}-{{ item.cn }}"
     extended_key_usage:
     - clientAuth
   with_items: "{{ openvpn_clients }}"
@@ -68,7 +69,7 @@
 - name: set static ip if requested per client
   template:
     src: ccd.j2
-    dest: "{{ openvpn_folder }}/ccd/OpenVPN-Client-{{ inventory_hostname }}-{{ item.cn }}"
+    dest: "{{ openvpn_folder }}/ccd/{{ item.cn }}"
   with_items: "{{ openvpn_clients }}"
   tags:
   - client
