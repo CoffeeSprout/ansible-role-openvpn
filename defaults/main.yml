@@ -103,3 +103,11 @@ openvpn_client_default_configuration:
 
 openvpn_client_configuration: []
 openvpn_push_options: []
+
+# Certificate revocation
+openvpn_crl_days: 365
+# openvpn_revoke_clients:
+# - cn: user1
+#   reason: key_compromise
+# - cn: user2
+#   reason: privilege_withdrawn

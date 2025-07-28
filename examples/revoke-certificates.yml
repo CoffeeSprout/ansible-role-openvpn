@@ -1,0 +1,35 @@
+---
+# Example playbook to revoke client certificates
+
+- hosts: openvpn_servers
+  become: yes
+  vars:
+    # List of client certificates to revoke
+    openvpn_revoke_clients:
+    - cn: user1
+      reason: key_compromise
+    - cn: user2-password
+      reason: privilege_withdrawn
+    - cn: former-employee
+      reason: affiliation_changed
+    # Optional: extend CRL validity (default: 365 days)
+    # openvpn_crl_days: 730
+  roles:
+  - coffeesprout.openvpn
+  # Run only the revocation tasks
+  tags:
+  - revoke
+
+# Valid revocation reasons:
+# - unspecified (default)
+# - key_compromise
+# - ca_compromise
+# - affiliation_changed
+# - superseded
+# - cessation_of_operation
+# - certificate_hold
+# - privilege_withdrawn
+# - aa_compromise
+
+# Alternative: run the role with specific tags
+# ansible-playbook revoke-certificates.yml --tags revoke

@@ -2,6 +2,7 @@
 
 openvpn_folder: /usr/local/etc/openvpn
 openvpn_easyrsa_folder: /usr/local/share/easy-rsa
+openvpn_service_name: openvpn
 
 openvpn_packages:
 - "openvpn"

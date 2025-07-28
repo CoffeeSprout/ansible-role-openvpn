@@ -1,0 +1,24 @@
+---
+# Revoke client certificates
+
+- name: Build revoked certificates list
+  set_fact:
+    revoked_certs: "{{ revoked_certs | default([]) + [{'path': openvpn_key_folder + '/' + item.cn + '.crt', 'reason': item.reason | default('unspecified')}] }}"
+  with_items: "{{ openvpn_revoke_clients }}"
+  when: openvpn_revoke_clients is defined
+  tags:
+  - revoke
+
+- name: Update certificate revocation list
+  community.crypto.x509_crl:
+    path: "{{ openvpn_key_folder }}/crl.pem"
+    privatekey_path: "{{ openvpn_key_folder }}/ca-key.pem"
+    issuer:
+      CN: "{{ openvpn_ca_cn }}"
+    next_update: "+{{ openvpn_crl_days }}d"
+    revoked_certificates: "{{ revoked_certs | default([]) }}"
+    crl_mode: update
+  when: openvpn_revoke_clients is defined and openvpn_revoke_clients | length > 0
+  notify: restart openvpn
+  tags:
+  - revoke

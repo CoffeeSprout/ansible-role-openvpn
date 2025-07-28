@@ -1,0 +1,11 @@
+---
+
+openvpn_folder: /etc/openvpn
+openvpn_easyrsa_folder: /usr/share/easy-rsa
+openvpn_root_group: wheel
+openvpn_group: nobody
+openvpn_service_name: openvpn@server
+
+openvpn_packages:
+- "openvpn"
+- "python3-cryptography"

@@ -30,11 +30,31 @@ The role supports several tags for targeted execution:
 - `update_crl` - Update certificate revocation list
 - `client` - Generate client certificates and configs
 - `pull` - Pull client configs to local machine
+- `revoke` - Revoke client certificates
 
 Example:
 ```bash
 ansible-playbook playbook.yml --tags client,pull
 ```
+
+### Revoking Client Certificates
+
+To revoke client certificates, set the `openvpn_revoke_clients` variable with a list of CNs:
+
+```yaml
+openvpn_revoke_clients:
+- cn: user1
+  reason: key_compromise
+- cn: user2
+  reason: privilege_withdrawn
+```
+
+Then run the playbook with the `revoke` tag:
+```bash
+ansible-playbook playbook.yml --tags revoke
+```
+
+See `examples/revoke-certificates.yml` for a complete example.
 
 ## Architecture and Structure
 
@@ -53,6 +73,7 @@ ansible-playbook playbook.yml --tags client,pull
 - `openvpn_key_folder` - Certificate storage (`{{ openvpn_folder }}/keys`)
 - `openvpn_client_folder` - Client config storage (`{{ openvpn_folder }}/client`)
 - `openvpn_clients` - List of client configurations with CN, validity, password, and optional static IP
+- `openvpn_service_name` - Service name for systemd (default: `openvpn`, use `openvpn@instance` for template units)
 
 ### Certificate Management
 The role uses the `community.crypto` collection for certificate operations:
@@ -67,6 +88,13 @@ The role uses the `community.crypto` collection for certificate operations:
 - Configs are pulled to `{{ playbook_dir }}/{{ inventory_hostname }}/` by default
 - Password-protected client keys supported with cipher auto-selection
 
-### OS-Specific Paths
-- FreeBSD: `/usr/local/etc/openvpn`
-- Debian: `/etc/openvpn`
+### OS-Specific Configuration
+- **FreeBSD**: 
+  - Path: `/usr/local/etc/openvpn`
+  - Service: `openvpn`
+- **Debian**: 
+  - Path: `/etc/openvpn`
+  - Service: `openvpn@openvpn`
+- **RedHat**: 
+  - Path: `/etc/openvpn`
+  - Service: `openvpn@server`

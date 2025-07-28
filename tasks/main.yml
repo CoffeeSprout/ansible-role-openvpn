@@ -31,3 +31,8 @@
   - client
   - pull
   - ccd
+
+- name: include certificate revocation
+  include_tasks: revoke.yml
+  tags:
+  - revoke

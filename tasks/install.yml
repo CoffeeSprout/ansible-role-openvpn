@@ -21,7 +21,7 @@
 
 - name: ensure openvpn can be started - Linux
   service:
-    name: openvpn
+    name: "{{ openvpn_service_name }}"
     enabled: True
   when: 'ansible_os_family != "FreeBSD"'
   ignore_errors: True
