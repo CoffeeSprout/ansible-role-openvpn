@@ -50,6 +50,8 @@
     privatekey_path: "{{ openvpn_key_folder }}/ca-key.pem"
     issuer:
       CN: "{{ openvpn_ca_cn }}"
-    next_update: "+365d"
+    next_update: "+3650d"
     revoked_certificates: []
-    mode: update
+    crl_mode: update
+  tags:
+  - update_crl

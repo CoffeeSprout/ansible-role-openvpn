@@ -22,6 +22,8 @@
 
 - name: include server keys
   include_tasks: server-keys.yml
+  tags:
+  - update_crl
 
 - name: include client key generation
   include_tasks: client-configs.yml
